@@ -1,0 +1,7 @@
+# .gitignore
+
+# Ignore all generated folders in the build directory
+build/tmp
+build/cache
+build/downloads
+build/sstate-cache

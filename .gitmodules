@@ -1,0 +1,16 @@
+[submodule "layers/bsp/meta-sunxi"]
+	path = layers/bsp/meta-sunxi
+	url = https://github.com/linux-sunxi/meta-sunxi
+[submodule "layers/third-party/meta-openembedded"]
+	path = layers/third-party/meta-openembedded
+	url = https://github.com/openembedded/meta-openembedded
+[submodule "layers/third-party/meta-rauc"]
+	path = layers/third-party/meta-rauc
+	url = https://github.com/rauc/meta-rauc
+[submodule "layers/third-party/meta-rauc-community"]
+	path = layers/third-party/meta-rauc-community
+	url = https://github.com/rauc/meta-rauc-community
+[submodule "layers/poky"]
+	path = layers/poky
+	url = git://git.yoctoproject.org/poky
+	branch = mickledore
