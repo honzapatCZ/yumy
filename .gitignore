@@ -5,3 +5,8 @@ build/tmp
 build/cache
 build/downloads
 build/sstate-cache
+
+build/task-depends.dot
+build/task-depends.png
+
+*.log
