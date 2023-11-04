@@ -14,3 +14,6 @@
 	path = layers/poky
 	url = git://git.yoctoproject.org/poky
 	branch = mickledore
+[submodule "layers/third-party/meta-mono"]
+	path = layers/third-party/meta-mono
+	url = git://git.yoctoproject.org/meta-mono

@@ -8,6 +8,10 @@ while [[ $# -gt 0 ]]
 do
     key="$1"
     case $key in
+        -e|--emulator)
+            export MACHINE="qemuarm64"
+            shift
+            ;;
         -i|--image)
             TARGET="image"
             shift
@@ -18,6 +22,10 @@ do
             ;;
         -g|--graph)
             TARGET="graph"
+            shift
+            ;;
+        -mk)
+            TARGET="modify-kernel"
             shift
             ;;
         *)
@@ -41,6 +49,16 @@ case $TARGET in
     "graph")
         bitbake -g -I u-boot -I linux-mainline -I uboot core-image-minimal
         dot -Tpng task-depends.dot -o task-depends.png
+        ;;
+    "menu-config")
+        bitbake -c menuconfig linux-mainline
+        bitbake -c diffconfig linux-mainline
+        ;;
+    "modify-kernel")
+        devtool modify linux-mainline
+        ;;
+    "finish-kernel")
+        devtool finish linux-mainline ~/layers/meta-yummy
         ;;
     *)
         echo "Unknown target: $TARGET"
