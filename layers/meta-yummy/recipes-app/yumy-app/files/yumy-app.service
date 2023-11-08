@@ -1,0 +1,8 @@
+[Unit]
+Description=The god of Yumi
+
+[Service]
+ExecStart=/opt/yumy-app/MyApp --fb
+
+[Install]
+WantedBy=multi-user.target

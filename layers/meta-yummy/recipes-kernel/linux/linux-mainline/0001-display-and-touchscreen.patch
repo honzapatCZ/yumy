@@ -1,0 +1,73 @@
+From bff55532e6e9ad6d43a395f5e1f065b4eeb921e9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jan=20Patrovsk=C3=BD?= <honzapatCZ@email.cz>
+Date: Sat, 4 Nov 2023 12:47:24 +0100
+Subject: [PATCH] display and touchscreen
+
+---
+ drivers/gpu/drm/tiny/Kconfig       |  13 ++
+ drivers/gpu/drm/tiny/Makefile      |   1 +
+ drivers/input/touchscreen/Kconfig  |  12 +
+ drivers/input/touchscreen/Makefile |   1 +
+ 4 files changed, 612 insertions(+)
+
+diff --git a/drivers/gpu/drm/tiny/Kconfig b/drivers/gpu/drm/tiny/Kconfig
+index 565957264..60310f6ce 100644
+--- a/drivers/gpu/drm/tiny/Kconfig
++++ b/drivers/gpu/drm/tiny/Kconfig
+@@ -199,3 +199,16 @@ config TINYDRM_ST7735R
+ 	  * Okaya RH128128T 1.44" 128x128 TFT
+ 
+ 	  If M is selected the module will be called st7735r.
++
++config TINYDRM_ST7796
++	tristate "DRM support for Sitronix ST7796 display panels"
++	depends on DRM && SPI
++	select DRM_KMS_HELPER
++	select DRM_GEM_DMA_HELPER
++	select DRM_MIPI_DBI
++	select BACKLIGHT_CLASS_DEVICE
++	help
++	  DRM driver for Sitronix Sitronix ST7796 with one of the following
++	  
++
++	  If M is selected the module will be called st7796.
+diff --git a/drivers/gpu/drm/tiny/Makefile b/drivers/gpu/drm/tiny/Makefile
+index 1d9d6227e..7c35d5467 100644
+--- a/drivers/gpu/drm/tiny/Makefile
++++ b/drivers/gpu/drm/tiny/Makefile
+@@ -15,3 +15,4 @@ obj-$(CONFIG_TINYDRM_MI0283QT)		+= mi0283qt.o
+ obj-$(CONFIG_TINYDRM_REPAPER)		+= repaper.o
+ obj-$(CONFIG_TINYDRM_ST7586)		+= st7586.o
+ obj-$(CONFIG_TINYDRM_ST7735R)		+= st7735r.o
++obj-$(CONFIG_TINYDRM_ST7796)		+= st7796.o
+diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
+index dc90a3ea5..2a727719a 100644
+--- a/drivers/input/touchscreen/Kconfig
++++ b/drivers/input/touchscreen/Kconfig
+@@ -1378,5 +1378,17 @@ config TOUCHSCREEN_ZINITIX
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called zinitix.
++		
++config TOUCHSCREEN_NS2009
++	tristate "NS2009 touchscreen support"
++	depends on I2C
++	help
++		Say Y here if you have a touchscreen using NS2009,
++		or something similar enough.
++
++		If unsure, say N.
++
++		To compile this driver as a module, choose M here: the
++		module will be called ns2009.
+ 
+ endif
+diff --git a/drivers/input/touchscreen/Makefile b/drivers/input/touchscreen/Makefile
+index 557f84fd2..f4e3ebb42 100644
+--- a/drivers/input/touchscreen/Makefile
++++ b/drivers/input/touchscreen/Makefile
+@@ -116,3 +116,4 @@ obj-$(CONFIG_TOUCHSCREEN_ROHM_BU21023)	+= rohm_bu21023.o
+ obj-$(CONFIG_TOUCHSCREEN_RASPBERRYPI_FW)	+= raspberrypi-ts.o
+ obj-$(CONFIG_TOUCHSCREEN_IQS5XX)	+= iqs5xx.o
+ obj-$(CONFIG_TOUCHSCREEN_ZINITIX)	+= zinitix.o
++obj-$(CONFIG_TOUCHSCREEN_NS2009)	+= ns2009.o

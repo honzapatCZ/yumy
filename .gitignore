@@ -10,3 +10,4 @@ build/task-depends.dot
 build/task-depends.png
 
 *.log
+build/bitbake-cookerdaemon.log

@@ -1,5 +1,9 @@
 {
     "files.associations": {
         "touchscreen.h": "c"
-    }
+    },
+    "bitbake.machine": "yummy",
+    "bitbake.distro": "poky",
+    "bitbake.oeInitBuildEnvPath": "${workspaceFolder}/layers/poky/oe-init-build-env",
+    "bitbake.bitbakePath": "${workspaceFolder}/layers/poky/bitbake/",
 }

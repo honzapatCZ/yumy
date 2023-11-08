@@ -24,8 +24,16 @@ do
             TARGET="graph"
             shift
             ;;
+        -menu)
+            TARGET="menu-config"
+            shift
+            ;;
         -mk)
             TARGET="modify-kernel"
+            shift
+            ;;
+        -fk)
+            TARGET="finish-kernel"
             shift
             ;;
         *)
@@ -34,6 +42,7 @@ do
             ;;
     esac
 done
+
 
 # Set OE environment by sourcing oe-init script
 source layers/poky/oe-init-build-env
@@ -58,7 +67,7 @@ case $TARGET in
         devtool modify linux-mainline
         ;;
     "finish-kernel")
-        devtool finish linux-mainline ~/layers/meta-yummy
+        devtool finish linux-mainline ../layers/meta-yummy
         ;;
     *)
         echo "Unknown target: $TARGET"

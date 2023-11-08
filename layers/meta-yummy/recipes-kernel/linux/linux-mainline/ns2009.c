@@ -25,7 +25,7 @@
 #include <linux/i2c.h>
 
 /* polling interval in ms */
-#define POLL_INTERVAL	30
+#define POLL_INTERVAL	17
 
 /* this driver uses 12-bit readout */
 #define MAX_12BIT	0xfff
@@ -52,6 +52,8 @@ struct ns2009_data {
 	struct touchscreen_properties	prop;
 
 	bool				pen_down;
+	u16			x_plate_ohms;
+	u16			max_rt;
 };
 
 static int ns2009_ts_read_data(struct ns2009_data *data, u8 cmd, u16 *val)
@@ -73,7 +75,8 @@ static int ns2009_ts_read_data(struct ns2009_data *data, u8 cmd, u16 *val)
 
 static int ns2009_ts_report(struct ns2009_data *data)
 {
-	u16 x, y, z1;
+	u16 x, y, z1, z2;
+    u32 rt;
 	int ret;
 
 	/*
@@ -84,28 +87,41 @@ static int ns2009_ts_report(struct ns2009_data *data)
 	ret = ns2009_ts_read_data(data, NS2009_READ_Z1_LOW_POWER_12BIT, &z1);
 	if (ret)
 		return ret;
+	ret = ns2009_ts_read_data(data, NS2009_READ_Z2_LOW_POWER_12BIT, &z2);
+	if (ret)
+		return ret;
 
-	if (z1 >= NS2009_PEN_UP_Z1_ERR) {
-		ret = ns2009_ts_read_data(data, NS2009_READ_X_LOW_POWER_12BIT,
-					  &x);
-		if (ret)
-			return ret;
+	ret = ns2009_ts_read_data(data, NS2009_READ_X_LOW_POWER_12BIT, &x);
+	if (ret)
+		return ret;
+	ret = ns2009_ts_read_data(data, NS2009_READ_Y_LOW_POWER_12BIT, &y);
+	if (ret)
+		return ret;
 
-		ret = ns2009_ts_read_data(data, NS2009_READ_Y_LOW_POWER_12BIT,
-					  &y);
-		if (ret)
-			return ret;
+   if(x == MAX_12BIT)
+ 		x = 0;
+
+	rt  = z2 - z1;
+	rt *= x;
+	rt *= data->x_plate_ohms;
+	rt /= z1;
+	rt = rt >> 12;
+
+	if (rt <= data->max_rt) {
 
 		if (!data->pen_down) {
 			input_report_key(data->input, BTN_TOUCH, 1);
 			data->pen_down = true;
 		}
+		rt = MAX_12BIT - rt;
 
 		input_report_abs(data->input, ABS_X, x);
 		input_report_abs(data->input, ABS_Y, y);
+		input_report_abs(data->input, ABS_PRESSURE, rt);
 		input_sync(data->input);
 	} else if (data->pen_down) {
 		input_report_key(data->input, BTN_TOUCH, 0);
+		input_report_abs(data->input, ABS_PRESSURE, 0);
 		input_sync(data->input);
 		data->pen_down = false;
 	}
@@ -190,6 +206,24 @@ static int ns2009_ts_request_polled_input_dev(struct ns2009_data *data)
 	return 0;
 }
 
+static int ns2009_probe_properties(struct device *dev, struct ns2009_data *ts)
+{
+	u32 val32;
+
+	if (!device_property_read_u32(dev, "max-rt", &val32))
+		ts->max_rt = val32;
+	else
+		ts->max_rt = MAX_12BIT;
+	if (!device_property_read_u32(dev, "x-plate-ohms", &val32)) {
+		ts->x_plate_ohms = val32;
+	} else {
+		dev_err(dev, "Missing ti,x-plate-ohms device property\n");
+		return -EINVAL;
+	}
+
+	return 0;
+}
+
 static int ns2009_ts_probe(struct i2c_client *client,
 			   const struct i2c_device_id *id)
 {
@@ -208,6 +242,10 @@ static int ns2009_ts_probe(struct i2c_client *client,
 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
 	if (!data)
 		return -ENOMEM;
+
+	error = ns2009_probe_properties(dev, data);
+	if (error)
+		return error;
 
 	i2c_set_clientdata(client, data);
 	data->client = client;
