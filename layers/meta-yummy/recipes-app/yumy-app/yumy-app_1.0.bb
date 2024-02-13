@@ -16,7 +16,7 @@ INSANE_SKIP:${PN} += "\
     staticdev \
 "
 
-SRC_URI = "git://github.com/RegiLikesMango/YumiUI"
+SRC_URI = "git://github.com/RegiLikesMango/YumiUI.git"
 SRCREV_default = "master"
 PV = "1.0+git${SRCPV}"
 

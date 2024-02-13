@@ -1,8 +1,14 @@
 [Unit]
 Description=The god of Yumi
+After=getty.target
+Conflicts=getty@tty1.service
 
 [Service]
 ExecStart=/opt/yumy-app/MyApp --fb
+WorkingDirectory=/opt/yumy-app/
+StandardInput=tty-force
+Restart=always
+RestartSec=15s
 
 [Install]
 WantedBy=multi-user.target

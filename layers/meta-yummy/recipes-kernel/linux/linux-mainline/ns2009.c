@@ -36,7 +36,7 @@
 #define NS2009_READ_Z2_LOW_POWER_12BIT	0xf0
 
 #define NS2009_DEF_X_FUZZ	32
-#define NS2009_DEF_Y_FUZZ	16
+#define NS2009_DEF_Y_FUZZ	25
 
 /*
  * The chip have some error in z1 value when pen is up, so the data read out

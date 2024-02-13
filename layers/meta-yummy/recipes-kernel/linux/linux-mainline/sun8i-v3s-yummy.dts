@@ -55,7 +55,17 @@
 	chosen {
 		stdout-path = "serial0: 115200n8";
 	};
+/*		
+	leds {
+		compatible = "gpio-leds";
 
+        green_led {
+			label = "Heartbeat";
+			gpios = <&pio 4 9 GPIO_ACTIVE_LOW>; /* PE9 *//*
+		    linux,default-trigger = "heartbeat";
+		};
+        
+	};*/
 
 	wifi_pwrseq: wifi-pwrseq {
 		compatible = "mmc-pwrseq-simple";
@@ -89,7 +99,7 @@
         "", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "",//128
         /* GPIOE */
     	"PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7",
     	"PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15",
@@ -99,25 +109,13 @@
         "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "",
         "", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "",
-        "", "", "", "", "", "", "", "",
+        "", "", "", "", "", "", "", "",//192
         /* GPIOG */
         "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "", "",
         "", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "";
 
-	// gpioa: gpio@1c20800{
-	// 	reg = <0x01c20800 0x400>;
-	// 	interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-	// 		     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-	// 	clocks = <&ccu CLK_BUS_PIO>, <&osc24M>,
-	// 		 <&rtc CLK_OSC32K>;
-	// 	clock-names = "apb", "hosc", "losc";
-	// 	gpio-controller;
-	// 	#gpio-cells = <3>;
-	// 	interrupt-controller;
-	// 	#interrupt-cells = <3>;
-	// }
 
 
 };
@@ -160,10 +158,14 @@
 	status = "okay";
 
     touch: tsc2007@48 {
-			compatible = "nsiway,ns2009";
+			compatible = "ti,tsc2007";
 			reg = <0x48>;
+            
+            interrupt-parent = <&pio>;//PB5
+			interrupts = <0 0x5 2>;//PB_EINT5 - bank 0, interrupt 5
+			gpios = <&pio 1 5 GPIO_ACTIVE_HIGH>;//PB5
 
-			x-plate-ohms = <300>;
+			ti,x-plate-ohms = <300>;
             panel = <&display>;
             touchscreen-swapped-x-y = <1>;
 	};
@@ -182,7 +184,7 @@
         write-only;
 		spi-max-frequency = <32000000>;
 		dc-gpios = <&pio 2 0 GPIO_ACTIVE_HIGH>; //PC0
-		reset-gpios = <&pio 1 5 GPIO_ACTIVE_HIGH>; //PB2, for testing PB5
+		reset-gpios = <&pio 1 2 GPIO_ACTIVE_HIGH>; //PB2, for testing PB5
 		rotation = <90>;
 		backlight = <&backlight>;
     };
