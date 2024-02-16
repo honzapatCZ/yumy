@@ -17,5 +17,5 @@ part u-boot --source rawcopy --sourceparams="file=${SPL_BINARY}" --ondisk mmcblk
 part /boot --source bootimg-partition --ondisk mmcblk0 --fstype=vfat --label boot --active --align 2048 --fixed-size ${SUNXI_BOOT_SPACE}
 part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --label rootfs_A --align 2048 --size 1024 
 part / --source rootfs --ondisk mmcblk0 --fstype=ext4 --label rootfs_B --align 2048 --size 1024
-part swap --ondisk mmcblk0 --size 44 --label swap --fstype=swap --size=128M --overhead-factor 1
+part swap --ondisk mmcblk0 --size 44 --label swap --fstype=swap --size=512M --overhead-factor 1
 

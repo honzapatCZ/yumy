@@ -16,13 +16,15 @@ INSANE_SKIP:${PN} += "\
     staticdev \
 "
 
-SRC_URI = "git://github.com/RegiLikesMango/YumiUI.git"
+SRC_URI = "git://github.com/RegiLikesMango/YumiUI.git;protocol=https;branch=master"
 SRCREV_default = "master"
 PV = "1.0+git${SRCPV}"
 
 RDEPENDS:${PN}:append = " \
     zlib \
     fontconfig \
+    libstdc++ \
+    libgcc \
 "
 #RDEPENDS:${PN}:append = " \
 #     icu \
@@ -36,7 +38,7 @@ CSPROJ = "${S}/MyApp.csproj"
 do_compile[network] = "1"
 
 do_compile () {
-    dotnet build ${CSPROJ} --output ${B}/${PN} --configuration release --runtime linux-${SRC_ARCH} --self-contained -p:PublishReadyToRun=true -p:PublishTrimmed=true     
+    dotnet build ${CSPROJ} --output ${B}/${PN} --configuration release --runtime linux-${SRC_ARCH} --self-contained -p:PublishReadyToRun=true -p:PublishTrimmed=true
 
     #FIXME: remove the following line. if the lttng-ust conflict is solved
     rm ${B}/${PN}/libcoreclrtraceptprovider.so
