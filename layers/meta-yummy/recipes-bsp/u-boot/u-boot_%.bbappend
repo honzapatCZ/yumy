@@ -1,9 +1,8 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-SRC_URI += "file://sun8i-v3s-yummy.dts;subdir=git/arch/arm/dts"
+#SRC_URI += "file://sun8i-v3s-yummy.dts;subdir=git/arch/arm/dts"
 
-#SRC_URI += "file://sun8i-v3s-yummy.dts;subdir=git/arch/arm/dts \
-#            file://Yummy_defconfig;subdir=git/configs/"
+SRC_URI += "file://sun8i-v3s-yummy.dts;subdir=git/arch/arm/dts"
 
 do_configure:prepend() {
     # Remove exisiting fdtfile, if there is one
