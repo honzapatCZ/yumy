@@ -38,7 +38,7 @@ CSPROJ = "${S}/MyApp.csproj"
 do_compile[network] = "1"
 
 do_compile () {
-    dotnet build ${CSPROJ} --output ${B}/${PN} --configuration release --runtime linux-${SRC_ARCH} --self-contained -p:PublishReadyToRun=true -p:PublishTrimmed=true
+    dotnet build ${CSPROJ} --output ${B}/${PN} --configuration release --runtime linux-${SRC_ARCH} --self-contained -p:PublishReadyToRun=true -p:PublishTrimmed=true -p:ExtraDefineConstants=BUILD_EMBEDDED
 
     #FIXME: remove the following line. if the lttng-ust conflict is solved
     rm ${B}/${PN}/libcoreclrtraceptprovider.so
