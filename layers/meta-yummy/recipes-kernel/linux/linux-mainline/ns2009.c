@@ -25,7 +25,7 @@
 #include <linux/i2c.h>
 
 /* polling interval in ms */
-#define POLL_INTERVAL	17
+#define POLL_INTERVAL	100
 
 /* this driver uses 12-bit readout */
 #define MAX_12BIT	0xfff
@@ -115,8 +115,9 @@ static int ns2009_ts_report(struct ns2009_data *data)
 		}
 		rt = MAX_12BIT - rt;
 
-		input_report_abs(data->input, ABS_X, x);
-		input_report_abs(data->input, ABS_Y, y);
+		//input_report_abs(data->input, ABS_X, x);
+		//input_report_abs(data->input, ABS_Y, y);
+		touchscreen_report_pos(data->input, &data->prop, x, y, false);
 		input_report_abs(data->input, ABS_PRESSURE, rt);
 		input_sync(data->input);
 	} else if (data->pen_down) {

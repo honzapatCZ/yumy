@@ -55,17 +55,17 @@
 	chosen {
 		stdout-path = "serial0: 115200n8";
 	};
-/*		
+
 	leds {
 		compatible = "gpio-leds";
 
         green_led {
 			label = "Heartbeat";
-			gpios = <&pio 4 9 GPIO_ACTIVE_LOW>; /* PE9 *//*
+			gpios = <&pio 4 9 GPIO_ACTIVE_HIGH>; /* PE9 */
 		    linux,default-trigger = "heartbeat";
 		};
         
-	};*/
+	};
 
 	wifi_pwrseq: wifi-pwrseq {
 		compatible = "mmc-pwrseq-simple";
@@ -89,7 +89,6 @@
         "PB8", "PB9", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "",
         "", "", "", "", "", "", "", "",
-        "",
         /* GPIOC */
         "PC0", "PC1", "PC2", "PC3", "", "", "", "",
         "", "", "", "", "", "", "", "",
@@ -103,8 +102,8 @@
         /* GPIOE */
     	"PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7",
     	"PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15",
-    	"PE16", "PE17", "PE18", "PE19", "PE20", "PE21", "PE22", "PE23", "PE24",
-        "", "", "", "", "", "", "", "",
+    	"PE16", "PE17", "PE18", "PE19", "PE20", "PE21", "PE22", "PE23", 
+        "PE24", "", "", "", "", "", "", "",
         /* GPIOF */
         "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "",
         "", "", "", "", "", "", "", "",
@@ -152,13 +151,15 @@
 
 &uart2{
 	status = "okay";
+	pinctrl-0 = <&uart2_pins>;
+	pinctrl-names = "default";
 };
 
 &i2c0 {
 	status = "okay";
 
     touch: tsc2007@48 {
-			compatible = "ti,tsc2007";
+			compatible = "nsiway,ns2009";//"ti,tsc2007";
 			reg = <0x48>;
             
             interrupt-parent = <&pio>;//PB5
@@ -166,8 +167,11 @@
 			gpios = <&pio 1 5 GPIO_ACTIVE_HIGH>;//PB5
 
 			ti,x-plate-ohms = <300>;
+            x-plate-ohms = <300>;
             panel = <&display>;
-            touchscreen-swapped-x-y = <1>;
+            //touchscreen-inverted-x;
+            touchscreen-inverted-y;
+            touchscreen-swapped-x-y;
 	};
 };
 
@@ -185,7 +189,7 @@
 		spi-max-frequency = <32000000>;
 		dc-gpios = <&pio 2 0 GPIO_ACTIVE_HIGH>; //PC0
 		reset-gpios = <&pio 1 2 GPIO_ACTIVE_HIGH>; //PB2, for testing PB5
-		rotation = <90>;
+		rotation = <270>;
 		backlight = <&backlight>;
     };
 };
