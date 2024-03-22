@@ -12,6 +12,10 @@ do
             export MACHINE="qemuarm64"
             shift
             ;;
+        -u|--update)
+            TARGET="update"
+            shift
+            ;;
         -i|--image)
             TARGET="image"
             shift
@@ -51,6 +55,10 @@ source layers/poky/oe-init-build-env
 case $TARGET in
     "image")
         bitbake core-image-minimal
+        ;;
+    "update")
+        bitbake core-image-minimal
+        bitbake update-bundle
         ;;
     "sdk")
         bitbake core-image-minimal -c populate_sdk
